@@ -1,0 +1,71 @@
+.CurrenciesGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1vh;
+    place-items: center center;
+    margin: 1vh;
+}
+
+.gridItem{
+    border: 1px solid #F2E8C9;
+    width: 100%;
+    margin: auto;
+    text-align: left;
+    padding: 2vh;
+    transition: 0.3s linear;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.gridItem.fav{
+    background-color: #387CA6;
+}
+.gridItem:hover{
+    background: #96D2D9;
+    color: #332F2C;
+    cursor: pointer;
+}
+.FavIcon{
+    color: #FFE684
+}
+
+.ControlsWrapper{
+    margin: 1vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vh;
+}
+.btn{
+    cursor: pointer
+}
+.btn-update{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: #F2E8C9;
+    border: #F2E8C9 1px solid;
+    padding: 1vh;
+    outline: none;
+    transition: 0.3s linear;
+    font-size: 1.2rem;
+}
+
+.btn-update:hover{
+    background: #387CA6;
+    color: #F2E8C9;
+}
+@media only screen and (max-width: 810px) {
+    .CurrenciesGrid{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .CurrenciesGrid{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .CurrenciesGrid{
+        grid-template-columns: 1fr;
+    }
+}

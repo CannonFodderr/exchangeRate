@@ -1,0 +1,12 @@
+.BaseSelector{
+    background: transparent;
+    color: #F2E8C9;
+    width: 100%;
+    border: #F2E8C9 1px solid;
+    font-size: 1.2rem;
+}
+
+.BaseSelectorOption{
+    background: transparent;
+    color: #000;
+}
