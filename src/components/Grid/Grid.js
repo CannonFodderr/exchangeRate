@@ -6,10 +6,11 @@ import './Grid.css'
 
 const INITIAL_FAVS = ["ILS", "USD", "EUR", "GBP", "JPY"]
 
-const Grid = ({base, handleNewDate, handleNewBase}) => {
-    const [exRatesData, setExRatesData] = useState(null)
+const Grid = ({base, handleNewDate, handleNewBase, date}) => {
+    const [exRatesData, setExRatesData] = useState(JSON.parse(localStorage.getItem('exRatesData')) || null)
     const [favs, setFavs] = useState(INITIAL_FAVS)
-    const [filterFavs, setFilterFavs] = useState(false)
+    const [filterFavs, setFilterFavs] = useState(true)
+    const [sum, setSum] = useState(1)
     const addFav = name => {
         setFavs([...favs, name])
     }
@@ -30,7 +31,7 @@ const Grid = ({base, handleNewDate, handleNewBase}) => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
             if(item === base) return null
-            let num = parseFloat(Math.round(exRatesData.rates[item] * 100) / 100).toFixed(2);
+            let num = parseFloat(Math.round(exRatesData.rates[item] * sum * 100) / 100).toFixed(2);
             return (
                 <div 
                 className="gridItem fav" 
@@ -49,7 +50,7 @@ const Grid = ({base, handleNewDate, handleNewBase}) => {
         return ratesKeys.map((item) => {
             if(item === base) return null
             if(favs.indexOf(item) >= 0) return null
-            let num = parseFloat(Math.round(exRatesData.rates[item] * 100) / 100).toFixed(2);
+            let num = parseFloat(Math.round(exRatesData.rates[item] * sum * 100) / 100).toFixed(2);
             return (
                 <div 
                 className="gridItem" 
@@ -73,13 +74,19 @@ const Grid = ({base, handleNewDate, handleNewBase}) => {
         setFilterFavs(filterState)
     }
     useEffect(() => {
-        api.get("?base=" + base)
-        .then(res => {
-            setExRatesData(res.data)
-            handleNewDate(res.data.date)
-        })
-        .catch(err => console.error(err))
-    }, [base, handleNewDate])
+        if(exRatesData) {
+            console.log("Local Data loaded")
+        } else {
+            api.get("?base=" + base)
+            .then(res => {
+                console.log("Got API response on mount")
+                localStorage.setItem('exRatesData', JSON.stringify(res.data))
+                setExRatesData(res.data)
+                handleNewDate(res.data.date)
+            })
+            .catch(err => console.error(err))
+        }
+    }, [base, handleNewDate, date, exRatesData])
     const debounceClick = (func, delay) => {
         let timer
         return () => {
@@ -94,7 +101,7 @@ const Grid = ({base, handleNewDate, handleNewBase}) => {
     }
     const handleClick = debounceClick(requestApiUpdate, 2000)
     const renderFilterFavBtn = () => {
-        const icon = !filterFavs ? "⭐" : "✗"
+        const icon = !filterFavs ? "⭐" : "❖"
         return (
             <button
                 className="btn"
@@ -102,17 +109,32 @@ const Grid = ({base, handleNewDate, handleNewBase}) => {
             ><span className="FavIcon">{icon}</span></button>
         )
     }
+    const handleNewSum = newSum => {
+        if(newSum < 0) {
+            setSum(0)
+        } else {
+            setSum(newSum)
+        }
+    }
     return(
         <>
             <div className="ControlsWrapper">
-                {renderFilterFavBtn()}
+                <input 
+                style={{fontSize:"1.2rem", width: "100%"}}
+                type="number" 
+                min={0} 
+                value={sum}
+                autoFocus
+                className="btn"
+                placeholder="Sum"
+                onChange={(e) => handleNewSum(e.target.value)}/>
                 {renderBaseSelector()}
+                {renderFilterFavBtn()}
                 <button 
                 className="btn btn-update"
                 onClick={() => handleClick()}
-                >UPDATE RATES</button>
+                >UPDATE</button>
             </div>
-            
             <div className="CurrenciesGrid">
                 {renderFavItems()}
                 {renderGridItems()}

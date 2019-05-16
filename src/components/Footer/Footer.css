@@ -1,0 +1,21 @@
+.FooterWrapper{
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1vh;
+}
+
+.FooterLink{
+    color: #96D2D9;
+    background: transparent;
+    text-decoration: none;
+    transition: 0.3s linear;
+}
+
+.FooterLink:hover{
+    color: #eb1e49;
+}
+
+.FooterIcon{
+    font-size: 1.2rem;
+    color: #eb1e49;
+}
