@@ -16,8 +16,8 @@ const App = () => {
     return(
         <>
             <div className="AppContainer">
-            <h1 style={{textAlign: "center"}}>Exchange Rate {base}</h1>
-            <h2 style={{textAlign: "center"}}>Updated: {date}</h2>
+            <h1 style={{textAlign: "center"}}>{base} Exchange Rate </h1>
+            <h4 style={{textAlign: "center"}}>Updated: {date}</h4>
             <Grid base={base} handleNewDate={handleNewDate} handleNewBase={handleNewBase}/>
             </div>
         </>

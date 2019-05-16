@@ -31,13 +31,11 @@
 .ControlsWrapper{
     margin: 1vh;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 3fr 3fr;
     gap: 1vh;
 }
 .btn{
-    cursor: pointer
-}
-.btn-update{
+    cursor: pointer;
     width: 100%;
     height: 100%;
     background: transparent;
@@ -49,7 +47,7 @@
     font-size: 1.2rem;
 }
 
-.btn-update:hover{
+.btn:hover{
     background: #387CA6;
     color: #F2E8C9;
 }
