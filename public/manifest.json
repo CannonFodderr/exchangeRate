@@ -2,29 +2,17 @@
   "manifest_version": 2,
   "name": "Currency Exchange",
   "description": "Currency Exchange Rate App",
-  "version": "0.0.5",
+  "version": "0.0.6",
 
   "browser_action": {
     "default_popup": "index.html",
     "default_title": "Open the popup"
   },
-  "icons": [
-    {
-      "src": "16S.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "48S.png",
-      "sizes": "48x48",
-      "type": "image/png"
-    },
-    {
-      "src": "128S.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }
-  ],
+  "icons": {
+    "16": "16S.png",
+    "48": "48S.png",
+    "128": "128S.png"
+  },
   "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'",  
   "permissions": [
   ]
