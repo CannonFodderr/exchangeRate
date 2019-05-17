@@ -10,7 +10,7 @@ const Footer = () => {
                 target="__blank" 
                 href="https://github.com/CannonFodderr/exchangeRate"
                 >GitHub</a></p>
-                <p>Create with <span className="FooterIcon">♥</span> by <a 
+                <p>Created with <span className="FooterIcon">♥</span> by <a 
                 className="FooterLink"
                 target="__blank" 
                 href="https://www.linkedin.com/in/idan-izhaki/"

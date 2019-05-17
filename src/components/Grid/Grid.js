@@ -4,22 +4,25 @@ import Spinner from '../Spinner/Spinner'
 import api from '../../api/api'
 import './Grid.css'
 
-const INITIAL_FAVS = ["ILS", "USD", "EUR", "GBP", "JPY"]
+const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", "EUR", "GBP", "JPY"]
+const INITIAL_DATA = JSON.parse(localStorage.getItem('exRatesData')) || null
 
 const Grid = ({base, handleNewDate, handleNewBase, date}) => {
-    const [exRatesData, setExRatesData] = useState(JSON.parse(localStorage.getItem('exRatesData')) || null)
+    const [exRatesData, setExRatesData] = useState(INITIAL_DATA)
     const [favs, setFavs] = useState(INITIAL_FAVS)
     const [filterFavs, setFilterFavs] = useState(true)
     const [sum, setSum] = useState(1)
     const addFav = name => {
-        setFavs([...favs, name])
+        const newFavs = [...favs, name]
+        localStorage.setItem('favs', JSON.stringify(newFavs))
+        setFavs(newFavs)
     }
     const removeFav = name => {
         const newFavs = favs.filter(fav => fav !== name)
+        localStorage.setItem('favs', JSON.stringify(newFavs))
         setFavs(newFavs)
     }
     const requestApiUpdate = () => {
-        console.log("Requesting new data...")
         api.get("?base=" + base)
         .then(res => {
             setExRatesData(res.data)
@@ -74,7 +77,7 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
         setFilterFavs(filterState)
     }
     useEffect(() => {
-        if(exRatesData) {
+        if(exRatesData && JSON.parse(localStorage.getItem('exRatesData')).base === base) {
             console.log("Local Data loaded")
         } else {
             api.get("?base=" + base)
