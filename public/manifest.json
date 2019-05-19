@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Currency Exchange",
   "description": "Currency Exchange Rate App",
-  "version": "0.0.9",
+  "version": "0.1.2",
 
   "browser_action": {
     "default_popup": "index.html",
