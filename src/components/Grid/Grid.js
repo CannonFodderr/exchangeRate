@@ -34,7 +34,7 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
             if(item === base) return null
-            let num = parseFloat(Math.round(exRatesData.rates[item] * sum * 100) / 100).toFixed(2);
+            let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
                 <div 
                 className="gridItem fav" 
@@ -53,7 +53,7 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
         return ratesKeys.map((item) => {
             if(item === base) return null
             if(favs.indexOf(item) >= 0) return null
-            let num = parseFloat(Math.round(exRatesData.rates[item] * sum * 100) / 100).toFixed(2);
+            let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
                 <div 
                 className="gridItem" 
