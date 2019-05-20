@@ -13,6 +13,28 @@ html {
     min-width: 400px;
     padding: 1vh;
 }
+.btn{
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: #F2E8C9;
+    border: #F2E8C9 1px solid;
+    padding: 1vh;
+    outline: none;
+    transition: 0.3s linear;
+    font-size: 1.2rem;
+}
+
+.btn.refresh{
+    border: none;
+    margin: 1vh;
+}
+.btn.refresh:hover{
+    border: none;
+    margin: 1vh;
+    background: transparent;
+}
 
 /* width */
 ::-webkit-scrollbar {

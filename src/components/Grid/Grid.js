@@ -1,47 +1,35 @@
-import React, {useEffect, useState} from 'react'
-import BaseSelector from '../BaseSelector/BaseSelector'
+import React, {useState} from 'react'
 import Spinner from '../Spinner/Spinner'
-import api from '../../api/api'
 import './Grid.css'
+import copy from 'copy-to-clipboard'
 
-const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", "EUR", "GBP", "JPY"]
-const INITIAL_DATA = JSON.parse(localStorage.getItem('exRatesData')) || null
 
-const Grid = ({base, handleNewDate, handleNewBase, date}) => {
-    const [exRatesData, setExRatesData] = useState(INITIAL_DATA)
-    const [favs, setFavs] = useState(INITIAL_FAVS)
+const INITIAL_SUM = localStorage.getItem('sum') || 1;
+
+const Grid = ({base, handleNewBase, exRatesData, favs, setExRatesData, addFav, removeFav}) => {
     const [filterFavs, setFilterFavs] = useState(true)
-    const [sum, setSum] = useState(1)
-    const addFav = name => {
-        const newFavs = [...favs, name]
-        localStorage.setItem('favs', JSON.stringify(newFavs))
-        setFavs(newFavs)
-    }
-    const removeFav = name => {
-        const newFavs = favs.filter(fav => fav !== name)
-        localStorage.setItem('favs', JSON.stringify(newFavs))
-        setFavs(newFavs)
-    }
-    const requestApiUpdate = () => {
-        api.get("?base=" + base)
-        .then(res => {
-            setExRatesData(res.data)
-            handleNewDate(res.data.date)
-        })
-        .catch(err => console.error(err))
+    const [sum, setSum] = useState(INITIAL_SUM)
+    const handleClipboard = (num) => {
+        copy(num)
     }
     const renderFavItems = () => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
-            if(item === base) return null
+            const className = item === base ? "gridItem fav currentBase" : "gridItem fav"
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
                 <div 
-                className="gridItem fav" 
+                className={className} 
                 key={item}
-                onClick={() => removeFav(item)}
                 >
-                    <p><span className="FavIcon">★</span> {item}: {num}</p>
+                    <button className="btn FavIcon selected" onClick={() => removeFav(item)}>★</button> 
+                    <span className="ItemDetails" onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    handleNewBase(item)
+                }}><div>{item} {num}</div></span>
+                <button className="btn clipboard"
+                onClick={(e) => handleClipboard(num)}><span aria-label="clipboard" role="img">📋</span></button>
                 </div>
             )
         })
@@ -51,16 +39,22 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
         if(!exRatesData) return <h4>No data available...</h4>
         const ratesKeys = Object.keys(exRatesData.rates);
         return ratesKeys.map((item) => {
-            if(item === base) return null
+            const className = item === base ? "gridItem currentBase" : "gridItem"
             if(favs.indexOf(item) >= 0) return null
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
                 <div 
-                className="gridItem" 
+                className={className} 
                 key={item}
-                onClick={() => addFav(item)}
                 >
-                    <p>{item}: {num}</p>
+                    <button className="btn FavIcon" onClick={() => addFav(item)}>★</button>
+                    <div className="ItemDetails" onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    handleNewBase(item)
+                }}>{item}: {num}</div>
+                <button className="btn clipboard"
+                onClick={(e) => handleClipboard(num)}><span role="img" aria-label="clipboard">📋</span></button>
                 </div>
             )
         })
@@ -68,41 +62,10 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
     const renderGridSpinner = () => {
         if(!exRatesData || !exRatesData.rates ) return <Spinner />
     }
-    const renderBaseSelector = () => {
-        if(!exRatesData || !exRatesData.rates ) return null
-        return <BaseSelector currentBase={base} options={Object.keys(exRatesData.rates)} handleNewBase={handleNewBase}/>
-    }
     const handleFilterFavs = () => {
         const filterState = !filterFavs
         setFilterFavs(filterState)
     }
-    useEffect(() => {
-        if(exRatesData && JSON.parse(localStorage.getItem('exRatesData')).base === base) {
-            console.log("Local Data loaded")
-        } else {
-            api.get("?base=" + base)
-            .then(res => {
-                console.log("Got API response on mount")
-                localStorage.setItem('exRatesData', JSON.stringify(res.data))
-                setExRatesData(res.data)
-                handleNewDate(res.data.date)
-            })
-            .catch(err => console.error(err))
-        }
-    }, [base, handleNewDate, date, exRatesData])
-    const debounceClick = (func, delay) => {
-        let timer
-        return () => {
-            if(exRatesData !== null){
-                setExRatesData(null)
-            }
-            clearTimeout(timer)
-            timer = setTimeout(() => {
-                func()
-            }, delay)
-        }
-    }
-    const handleClick = debounceClick(requestApiUpdate, 2000)
     const renderFilterFavBtn = () => {
         const icon = !filterFavs ? "⭐" : "❖"
         return (
@@ -116,12 +79,14 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
         if(newSum < 0) {
             setSum(0)
         } else {
+            localStorage.setItem('sum', newSum)
             setSum(newSum)
         }
     }
     return(
         <>
             <div className="ControlsWrapper">
+            {renderFilterFavBtn()}
                 <input 
                 style={{fontSize:"1.2rem", width: "100%"}}
                 type="number" 
@@ -131,12 +96,6 @@ const Grid = ({base, handleNewDate, handleNewBase, date}) => {
                 className="btn"
                 placeholder="Sum"
                 onChange={(e) => handleNewSum(e.target.value)}/>
-                {renderBaseSelector()}
-                {renderFilterFavBtn()}
-                <button 
-                className="btn btn-update"
-                onClick={() => handleClick()}
-                >UPDATE</button>
             </div>
             <div className="CurrenciesGrid">
                 {renderFavItems()}

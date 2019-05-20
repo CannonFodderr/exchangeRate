@@ -1,27 +1,70 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Grid from '../Grid/Grid'
 import Footer from '../Footer/Footer'
 import './App.css'
+import api from '../../api/api'
+
+const INITIAL_DATA = JSON.parse(localStorage.getItem('exRatesData')) || null
+const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", "EUR", "GBP", "JPY"]
 
 const App = () => {
     const INITITAL_DATE = !JSON.parse(localStorage.getItem('exRatesData')) ? null : JSON.parse(localStorage.getItem('exRatesData')).date
     const [base, setBase] = useState(localStorage.getItem("base") || "USD")
     const [date, setDate] = useState(INITITAL_DATE)
-    const handleNewDate = newDate => {
-        if(newDate === date) return
-        setDate(newDate)
-    }
+    const [exRatesData, setExRatesData] = useState(INITIAL_DATA)
+    const [favs, setFavs] = useState(INITIAL_FAVS)
     const handleNewBase = newBase => {
         if(newBase === base) return
         localStorage.setItem("base", newBase)
         setBase(newBase)
     }
+    const addFav = name => {
+        const newFavs = [...favs, name]
+        localStorage.setItem('favs', JSON.stringify(newFavs))
+        setFavs(newFavs)
+    }
+    const removeFav = name => {
+        const newFavs = favs.filter(fav => fav !== name)
+        localStorage.setItem('favs', JSON.stringify(newFavs))
+        setFavs(newFavs)
+    }
+    const requestApiUpdate = () => {
+        api.get("?base=" + base)
+        .then(res => {
+            localStorage.setItem('exRatesData', JSON.stringify(res.data))
+            setExRatesData(res.data)
+            setDate(res.data.date)
+        })
+        .catch(err => console.error(err))
+    }
+    useEffect(() => {
+        if(exRatesData && JSON.parse(localStorage.getItem('exRatesData')).base === base) {
+            console.log("Local Data loaded")
+        } else {
+            api.get("?base=" + base)
+            .then(res => {
+                console.log("Got API response on mount")
+                localStorage.setItem('exRatesData', JSON.stringify(res.data))
+                setExRatesData(res.data)
+                setDate(res.data.date)
+            })
+            .catch(err => console.error(err))
+        }
+    }, [base, date, exRatesData])
     return(
         <>
             <div className="AppContainer">
             <h1 style={{textAlign: "center"}}>{base} Exchange Rate </h1>
-            <h4 style={{textAlign: "center"}}>Updated: {date}</h4>
-            <Grid base={base} handleNewDate={handleNewDate} handleNewBase={handleNewBase} date={date}/>
+            <h4 style={{textAlign: "center"}}><span aria-label="refresh" className="btn refresh"role="img" onClick={requestApiUpdate}>🔄</span>UPDATED: {date}</h4>
+            <Grid 
+            base={base} 
+            handleNewBase={handleNewBase} 
+            date={date}
+            exRatesData={exRatesData}
+            favs={favs}
+            addFav={addFav}
+            removeFav={removeFav}
+            />
             <Footer />
             </div>
         </>
