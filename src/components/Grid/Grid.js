@@ -11,12 +11,14 @@ const Grid = ({base, handleNewBase, exRatesData, favs, setExRatesData, addFav, r
     const [sum, setSum] = useState(INITIAL_SUM)
     const handleClipboard = (num) => {
         copy(num)
+        alert("Copied to clipboard")
     }
     const renderFavItems = () => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
             const className = item === base ? "gridItem fav currentBase" : "gridItem fav"
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
+            if(item === base) num = sum
             return (
                 <div 
                 className={className} 
