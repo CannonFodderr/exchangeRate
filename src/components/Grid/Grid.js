@@ -6,7 +6,7 @@ import copy from 'copy-to-clipboard'
 
 const INITIAL_SUM = localStorage.getItem('sum') || 1;
 
-const Grid = ({base, handleNewBase, exRatesData, favs, setExRatesData, addFav, removeFav}) => {
+const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
     const [filterFavs, setFilterFavs] = useState(true)
     const [sum, setSum] = useState(INITIAL_SUM)
     const handleClipboard = (num) => {
@@ -31,7 +31,7 @@ const Grid = ({base, handleNewBase, exRatesData, favs, setExRatesData, addFav, r
                     handleNewBase(item)
                 }}><div>{item} {num}</div></span>
                 <button className="btn clipboard"
-                onClick={(e) => handleClipboard(num)}><span aria-label="clipboard" role="img">📋</span></button>
+                onClick={() => handleClipboard(num)}><span aria-label="clipboard" role="img">📋</span></button>
                 </div>
             )
         })

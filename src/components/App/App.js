@@ -29,6 +29,7 @@ const App = () => {
         setFavs(newFavs)
     }
     const requestApiUpdate = () => {
+        setExRatesData(null)
         api.get("?base=" + base)
         .then(res => {
             localStorage.setItem('exRatesData', JSON.stringify(res.data))
@@ -41,14 +42,20 @@ const App = () => {
         if(exRatesData && JSON.parse(localStorage.getItem('exRatesData')).base === base) {
             console.log("Local Data loaded")
         } else {
-            api.get("?base=" + base)
-            .then(res => {
-                console.log("Got API response on mount")
-                localStorage.setItem('exRatesData', JSON.stringify(res.data))
-                setExRatesData(res.data)
-                setDate(res.data.date)
-            })
-            .catch(err => console.error(err))
+            setExRatesData(null)
+            let timer = setTimeout(() => {
+                api.get("?base=" + base)
+                .then(res => {
+                    console.log("Got API response on mount")
+                    localStorage.setItem('exRatesData', JSON.stringify(res.data))
+                    setExRatesData(res.data)
+                    setDate(res.data.date)
+                })
+                .catch(err => console.error(err))
+            }, 1000)
+            return () => {
+                clearTimeout(timer)
+            }
         }
     }, [base, date, exRatesData])
     return(
