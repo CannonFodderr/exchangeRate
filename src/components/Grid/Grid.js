@@ -15,10 +15,7 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
     }
     const renderSingleItem = (item, num, favFunc, className) => {
         return (
-            <div 
-                className={className} 
-                key={item}
-                >
+            <>
                     <button className="btn FavIcon selected" onClick={() => favFunc(item)}>★</button> 
                     <span className="ItemDetails" onClick={(e) => {
                     e.stopPropagation()
@@ -31,19 +28,20 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
                 alt="copy to clipboard" 
                 onClick={() => handleClipboard(num)}
                 />
-                </div>
+                </>
         )
     }
     const renderFavItems = () => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
             const className = item === base ? "gridItem fav currentBase" : "gridItem fav"
+            console.log(exRatesData)
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             if(item === base) num = sum
             return (
-                <>
+                <div key={item} className={className}>
                     {renderSingleItem(item, num, removeFav, className)}
-                </>
+                </div>
             )
         })
     }
@@ -56,14 +54,14 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
             if(favs.indexOf(item) >= 0) return null
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
-                <>
-                    {renderSingleItem(item, num, addFav, className)}
-                </>
+                <div key={item} className={className}>
+                    {renderSingleItem(item, num, addFav)}
+                </div>
             )
         })
     }
     const renderGridSpinner = () => {
-        if(!exRatesData || !exRatesData.rates ) return <Spinner />
+        if(!exRatesData ) return <Spinner />
     }
     const handleFilterFavs = () => {
         const filterState = !filterFavs

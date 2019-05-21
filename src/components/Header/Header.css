@@ -1,0 +1,25 @@
+.date{
+    width: fit-content;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+    gap: 1vh;
+    place-items: center left;
+    grid-auto-rows: fit-content;
+}
+.refreshBTN{
+    height: 1.5rem;
+    border: none;
+    background: transparent;
+    margin: 0 auto;
+    cursor: pointer;
+}
+.refreshImg{
+    width: auto;
+    height: 1.5rem;
+    transition: 1s linear;
+}
+
+.refreshImg:hover{
+    transform: rotate(180deg)
+}
