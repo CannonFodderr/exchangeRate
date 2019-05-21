@@ -13,6 +13,27 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
         copy(num)
         alert("Copied to clipboard")
     }
+    const renderSingleItem = (item, num, favFunc, className) => {
+        return (
+            <div 
+                className={className} 
+                key={item}
+                >
+                    <button className="btn FavIcon selected" onClick={() => favFunc(item)}>★</button> 
+                    <span className="ItemDetails" onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    handleNewBase(item)
+                }}><div>{item} {num}</div></span>
+                <img 
+                className="clipboard" 
+                src="./clipboard.png" 
+                alt="copy to clipboard" 
+                onClick={() => handleClipboard(num)}
+                />
+                </div>
+        )
+    }
     const renderFavItems = () => {
         if(!exRatesData || !favs || favs.length < 1) return null
         return favs.map((item) => {
@@ -20,19 +41,9 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             if(item === base) num = sum
             return (
-                <div 
-                className={className} 
-                key={item}
-                >
-                    <button className="btn FavIcon selected" onClick={() => removeFav(item)}>★</button> 
-                    <span className="ItemDetails" onClick={(e) => {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    handleNewBase(item)
-                }}><div>{item} {num}</div></span>
-                <button className="btn clipboard"
-                onClick={() => handleClipboard(num)}><span aria-label="clipboard" role="img">📋</span></button>
-                </div>
+                <>
+                    {renderSingleItem(item, num, removeFav, className)}
+                </>
             )
         })
     }
@@ -45,19 +56,9 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
             if(favs.indexOf(item) >= 0) return null
             let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
             return (
-                <div 
-                className={className} 
-                key={item}
-                >
-                    <button className="btn FavIcon" onClick={() => addFav(item)}>★</button>
-                    <div className="ItemDetails" onClick={(e) => {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    handleNewBase(item)
-                }}>{item}: {num}</div>
-                <button className="btn clipboard"
-                onClick={(e) => handleClipboard(num)}><span role="img" aria-label="clipboard">📋</span></button>
-                </div>
+                <>
+                    {renderSingleItem(item, num, addFav, className)}
+                </>
             )
         })
     }
@@ -69,12 +70,12 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
         setFilterFavs(filterState)
     }
     const renderFilterFavBtn = () => {
-        const icon = !filterFavs ? "⭐" : "❖"
+        const className = filterFavs ? "FavIcon selected" : "FavIcon"
+
         return (
-            <button
-                className="btn"
+            <button className="btn"
                 onClick={handleFilterFavs}
-            ><span className="FavIcon">{icon}</span></button>
+            ><span className={className}>★</span></button>
         )
     }
     const handleNewSum = newSum => {
@@ -85,19 +86,24 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
             setSum(newSum)
         }
     }
-    return(
-        <>
-            <div className="ControlsWrapper">
-            {renderFilterFavBtn()}
-                <input 
+    const renderInput = () => {
+        return (
+            <input 
                 style={{fontSize:"1.2rem", width: "100%"}}
                 type="number" 
                 min={0} 
                 value={sum}
                 autoFocus
-                className="btn"
+                className="inputSum"
                 placeholder="Sum"
                 onChange={(e) => handleNewSum(e.target.value)}/>
+        )
+    }
+    return(
+        <>
+            <div className="ControlsWrapper">
+            {renderFilterFavBtn()}
+            {renderInput()}
             </div>
             <div className="CurrenciesGrid">
                 {renderFavItems()}

@@ -13,6 +13,17 @@ html {
     min-width: 400px;
     padding: 1vh;
 }
+.inputSum{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: #F2E8C9;
+    border: #F2E8C9 1px solid;
+    padding: 1vh;
+    outline: none;
+    transition: 0.3s linear;
+    font-size: 1.2rem;
+}
 .btn{
     cursor: pointer;
     width: 100%;

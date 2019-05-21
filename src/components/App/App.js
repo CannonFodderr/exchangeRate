@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Grid from '../Grid/Grid'
+import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import './App.css'
 import api from '../../api/api'
@@ -28,16 +29,6 @@ const App = () => {
         localStorage.setItem('favs', JSON.stringify(newFavs))
         setFavs(newFavs)
     }
-    const requestApiUpdate = () => {
-        setExRatesData(null)
-        api.get("?base=" + base)
-        .then(res => {
-            localStorage.setItem('exRatesData', JSON.stringify(res.data))
-            setExRatesData(res.data)
-            setDate(res.data.date)
-        })
-        .catch(err => console.error(err))
-    }
     useEffect(() => {
         if(exRatesData && JSON.parse(localStorage.getItem('exRatesData')).base === base) {
             console.log("Local Data loaded")
@@ -61,8 +52,7 @@ const App = () => {
     return(
         <>
             <div className="AppContainer">
-            <h1 style={{textAlign: "center"}}>{base} Exchange Rate </h1>
-            <h4 style={{textAlign: "center"}}><span aria-label="refresh" className="btn refresh"role="img" onClick={requestApiUpdate}>🔄</span>UPDATED: {date}</h4>
+            <Header base={base} date={date}/>
             <Grid 
             base={base} 
             handleNewBase={handleNewBase} 
