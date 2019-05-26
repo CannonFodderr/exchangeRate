@@ -10,7 +10,7 @@ build.zip
 
 # production
 /build
-
+/release-builds
 # misc
 .DS_Store
 .env.local
