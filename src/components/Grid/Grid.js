@@ -32,11 +32,10 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
         )
     }
     const renderFavItems = () => {
-        if(!exRatesData || !favs || favs.length < 1) return null
+        if(!exRatesData || !exRatesData[base] || !favs || favs.length < 1) return <Spinner />
         return favs.map((item) => {
             const className = item === base ? "gridItem fav currentBase" : "gridItem fav"
-            console.log(exRatesData)
-            let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
+            let num = parseFloat(exRatesData[base][item] * sum * 100 / 100).toFixed(4);
             if(item === base) num = sum
             return (
                 <div key={item} className={className}>
@@ -47,12 +46,12 @@ const Grid = ({base, handleNewBase, exRatesData, favs, addFav, removeFav}) => {
     }
     const renderGridItems = () => {
         if(filterFavs) return null;
-        if(!exRatesData) return <h4>No data available...</h4>
-        const ratesKeys = Object.keys(exRatesData.rates);
+        if(!exRatesData || !exRatesData[base]) return null
+        const ratesKeys = Object.keys(exRatesData[base]);
         return ratesKeys.map((item) => {
             const className = item === base ? "gridItem currentBase" : "gridItem"
             if(favs.indexOf(item) >= 0) return null
-            let num = parseFloat(exRatesData.rates[item] * sum * 100 / 100).toFixed(4);
+            let num = parseFloat(exRatesData[base][item] * sum * 100 / 100).toFixed(4);
             return (
                 <div key={item} className={className}>
                     {renderSingleItem(item, num, addFav)}
