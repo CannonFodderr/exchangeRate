@@ -12,13 +12,12 @@ const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", 
 const App = () => {
     const INITITAL_DATE = !JSON.parse(localStorage.getItem('exRatesData')) ? null : JSON.parse(localStorage.getItem('exRatesData')).date
     const [base, setBase] = useState(localStorage.getItem("base") || "USD")
-    const INITIAL_DATA = JSON.parse(localStorage.getItem(base)) || null
+    // const INITIAL_DATA = JSON.parse(localStorage.getItem(base)) || null
     const [date, setDate] = useState(INITITAL_DATE)
-    const [exRatesData, setExRatesData] = useState(INITIAL_DATA)
+    const [exRatesData, setExRatesData] = useState({})
     const [favs, setFavs] = useState(INITIAL_FAVS)
     const handleNewBase = newBase => {
         if(newBase === base) return
-        // const storageData = JSON.parse(localStorage.getItem(base))
         localStorage.setItem("base", newBase)
         setBase(newBase)
     }
@@ -32,32 +31,26 @@ const App = () => {
         localStorage.setItem('favs', JSON.stringify(newFavs))
         setFavs(newFavs)
     }
-    const clearStorageData = () => {
-        localStorage.clear()
-        setExRatesData(null)
+    const clearAPiData = () => {
+        setExRatesData({})
     }
     useEffect(() => {
-        if(exRatesData && exRatesData.base === base) return
-        if(exRatesData && JSON.parse(localStorage.getItem(base))) {
-            const storageData = JSON.parse(localStorage.getItem(base))
-            setExRatesData(storageData)
-            console.log("Local Data loaded")
-        } else {
-            setExRatesData(null)
+        if(exRatesData[base]) return
             let timer = setTimeout(() => {
                 api.get("?base=" + base)
                 .then(res => {
                     console.log("Got API response on mount")
-                    localStorage.setItem(base, JSON.stringify(res.data))
+                    const newData = {...exRatesData}
+                    newData[res.data.base] = res.data.rates
+                    // localStorage.setItem(base, JSON.stringify(res.data))
                     setDate(res.data.date)
-                    setExRatesData(res.data)
+                    setExRatesData(newData)
                 })
                 .catch(err => console.error(err))
             }, 1000)
             return () => {
                 clearTimeout(timer)
             }
-        }
     }, [base, date, exRatesData])
     const renderContent = () => {
         if(!exRatesData) {
@@ -70,11 +63,11 @@ const App = () => {
         }
         return (
             <div className="AppContainer">
-            <Header base={base} date={exRatesData.date} clearStorageData={clearStorageData}/>
+            <Header base={base} date={date} clearAPiData={clearAPiData}/>
             <Grid 
             base={base} 
             handleNewBase={handleNewBase} 
-            date={exRatesData.date}
+            date={date}
             exRatesData={exRatesData}
             favs={favs}
             addFav={addFav}
