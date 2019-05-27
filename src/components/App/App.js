@@ -12,6 +12,7 @@ const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", 
 const App = () => {
     const INITITAL_DATE = !JSON.parse(localStorage.getItem('exRatesData')) ? null : JSON.parse(localStorage.getItem('exRatesData')).date
     const [base, setBase] = useState(localStorage.getItem("base") || "USD")
+    // const INITIAL_DATA = JSON.parse(localStorage.getItem(base)) || null
     const [date, setDate] = useState(INITITAL_DATE)
     const [exRatesData, setExRatesData] = useState({})
     const [favs, setFavs] = useState(INITIAL_FAVS)
@@ -34,17 +35,16 @@ const App = () => {
         setExRatesData({})
     }
     useEffect(() => {
-        if(exRatesData && exRatesData[base]) return
-            // setExRatesData(null)
+        if(exRatesData[base]) return
             let timer = setTimeout(() => {
                 api.get("?base=" + base)
                 .then(res => {
-                    console.log("Got API response")
-                    const baseName = res.data.base 
+                    console.log("Got API response on mount")
                     const newData = {...exRatesData}
-                    newData[baseName] = res.data.rates
+                    newData[res.data.base] = res.data.rates
+                    // localStorage.setItem(base, JSON.stringify(res.data))
                     setDate(res.data.date)
-                    setExRatesData({...newData})
+                    setExRatesData(newData)
                 })
                 .catch(err => console.error(err))
             }, 1000)
