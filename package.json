@@ -2,6 +2,8 @@
   "name": "currency",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
+  "main": "electron-starter.js",
   "dependencies": {
     "axios": "^0.18.0",
     "copy-to-clipboard": "^3.2.0",
@@ -13,7 +15,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "package-win": "electron-packager . currency-exchange-app --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Currency ExCalc\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -29,5 +33,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^5.0.2"
   }
 }
