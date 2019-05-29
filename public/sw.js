@@ -1,5 +1,7 @@
 const PRECACHE_URLS = [
     'index.html',
+    'clipboard.png',
+    'reload.png'
 ]
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js', {scope: './'})
