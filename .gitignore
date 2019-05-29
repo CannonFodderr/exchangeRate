@@ -13,6 +13,7 @@ build.zip
 /release-builds
 # misc
 .env
+.vs
 .DS_Store
 .env.local
 .env.development.local
