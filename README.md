@@ -1,4 +1,4 @@
-## Currency Exchange Rates Extension
+## Currency Exchange Rates
 
 ## Current Features
 
