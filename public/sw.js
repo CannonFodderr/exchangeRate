@@ -1,4 +1,5 @@
 const PRECACHE_URLS = [
+    '/',
     'index.html',
     'clipboard.png',
     'reload.png'

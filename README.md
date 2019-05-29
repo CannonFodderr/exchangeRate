@@ -1,15 +1,15 @@
 ## Currency Exchange Rates Extension
 
-[Add the extension to chrome](https://chrome.google.com/webstore/detail/currency-exchange/cpcpkkbgimgkcpckmfkcmgoghfjgadik)
-
 ## Current Features
 
+* Available as a [Progressive Web App](https://chrome.google.com/webstore/detail/currency-exchange/cpcpkkbgimgkcpckmfkcmgoghfjgadik), [Electron](https://drive.google.com/open?id=15FxapsgGJet4SMqPhLgl_nNbPlZJkwNN) or [Chrome Extension](https://chrome.google.com/webstore/detail/currency-exchange/cpcpkkbgimgkcpckmfkcmgoghfjgadik).
 * View updated data from the European Central Bank API
 * Set favorite currencies
 * Set base currency.
 * View and copy to clipboard the calculated sum
 * Recived data stored in local storage to prevent multiple requests.
-* Local storage loads exchange rate data, base currency and last inputed sum.
+* Local storage loads base currency and last inputed sum.
+* Currency data from API stored in memory.
 
 ### `npm start`
 

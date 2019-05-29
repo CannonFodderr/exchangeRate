@@ -4,7 +4,7 @@
   "short_name": "Currency",
   "description": "Currency Exchange Rate App",
   "version": "0.2.1",
-  "start_url": "/",
+  "start_url": "https://s3-eu-west-1.amazonaws.com/reactcurrencyexchange/index.html",
   "background_color": "#4C4642",
   "theme_color": "#4C4642",
   "homepage": ".",
