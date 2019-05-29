@@ -15,33 +15,11 @@
     "default_title": "Open the popup",
     "default_icon": {"16": "16S.png"}
   },
-  "icons": [
-    {
-      "src": "192S.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "512S.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "16S.png",
-      "type": "image/png",
-      "sizes": "16x16"
-    },
-    {
-      "src": "48S.png",
-      "type": "image/png",
-      "sizes": "48x48"
-    },
-    {
-      "src": "128S.png",
-      "type": "image/png",
-      "sizes": "128x128"
-    }
-  ],
+  "icons": {
+    "16": "16S.png",
+    "48": "48S.png",
+    "128": "128s.png"
+  },
   "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'",  
   "permissions": [
   ]
