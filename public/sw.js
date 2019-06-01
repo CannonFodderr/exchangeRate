@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable default-case */
+
 const PRECACHE_URLS = [
     '/',
     'index.html',
@@ -6,11 +9,29 @@ const PRECACHE_URLS = [
 ]
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js', {scope: './'})
-    .then(registration => {
-        console.log(registration)
+    .then(reg => {
+        reg.onupdatefound = () => {
+            const installingWorker = reg.installing
+            installingWorker.onstatechange = () => {
+                switch(installingWorker.state){
+                    case 'installed':
+                        if(navigator.serviceWorker.controller) {
+                            const confirmed = confirm("Update is available")
+                            if(confirmed) reg.update()
+                        }
+                        break
+                    default: return null;
+                }
+            }
+        }
     })
     .catch(err => console.error(err))
 } 
+self.addEventListener('activate', event => {
+    console.log(event)
+})
+
+
 self.addEventListener('install', event => {
     console.log("Installing SW....")
     event.waitUntil(

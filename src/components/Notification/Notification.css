@@ -1,0 +1,7 @@
+.notificationWrapper{
+    display: grid;
+    place-items: center center;
+    background: #eb1e49;
+    padding: 1vh;
+    text-align: center;
+}

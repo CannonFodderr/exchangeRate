@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react'
 import Grid from '../Grid/Grid'
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
-import Spinner from '../Spinner/Spinner';
+import Spinner from '../Spinner/Spinner'
+import Notification from '../Notification/Notification'
 import './App.css'
 import api from '../../api/api'
 
@@ -12,10 +13,11 @@ const INITIAL_FAVS = JSON.parse(localStorage.getItem('favs')) || ["ILS", "USD", 
 const App = () => {
     const INITITAL_DATE = !JSON.parse(localStorage.getItem('exRatesData')) ? null : JSON.parse(localStorage.getItem('exRatesData')).date
     const [base, setBase] = useState(localStorage.getItem("base") || "USD")
-    // const INITIAL_DATA = JSON.parse(localStorage.getItem(base)) || null
     const [date, setDate] = useState(INITITAL_DATE)
     const [exRatesData, setExRatesData] = useState({})
     const [favs, setFavs] = useState(INITIAL_FAVS)
+    const [msg, setMessage] = useState("")
+    const [isStandAlone, setIsStandAlone] = useState(false)
     const handleNewBase = newBase => {
         if(newBase === base) return
         localStorage.setItem("base", newBase)
@@ -35,6 +37,16 @@ const App = () => {
         setExRatesData({})
     }
     useEffect(() => {
+        console.log(navigator.serviceWorker)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log("Standalone Mode")
+            setIsStandAlone(true)
+        } else {
+            console.log("Web Mode")
+            setMessage("Use Offline")
+        }
+    }, [])
+    useEffect(() => {
         if(exRatesData[base]) return
             let timer = setTimeout(() => {
                 api.get("?base=" + base)
@@ -42,7 +54,6 @@ const App = () => {
                     console.log("Got API response on mount")
                     const newData = {...exRatesData}
                     newData[res.data.base] = res.data.rates
-                    // localStorage.setItem(base, JSON.stringify(res.data))
                     setDate(res.data.date)
                     setExRatesData(newData)
                 })
@@ -52,6 +63,10 @@ const App = () => {
                 clearTimeout(timer)
             }
     }, [base, date, exRatesData])
+    const renderSWNotification = () => {
+        if('serviceWorker' in navigator) return <Notification msg={msg} isStandAlone={isStandAlone}/>
+        return null;
+    }
     const renderContent = () => {
         if(!exRatesData) {
             return (
@@ -63,6 +78,7 @@ const App = () => {
         }
         return (
             <div className="AppContainer">
+            {renderSWNotification()}
             <Header base={base} date={date} clearAPiData={clearAPiData}/>
             <Grid 
             base={base} 
