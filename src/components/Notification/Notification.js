@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import './Notification.css'
 
-const Notification = ({msg, isStandAlone}) => {
+const Notification = ({isStandAlone}) => {
     let [prompt, setPrompt] = useState(null)
+    const [msg, setMessage] = useState("")
     const installClickHandler = () => {
         prompt.prompt()
         prompt.userChoice.then(function(choiceResult){
@@ -11,6 +12,7 @@ const Notification = ({msg, isStandAlone}) => {
                     console.log('User cancelled home screen install');
                 }else{
                     console.log('User added to home screen');
+                    setMessage("")
                 }
         });
     }
@@ -18,13 +20,14 @@ const Notification = ({msg, isStandAlone}) => {
         window.addEventListener('beforeinstallprompt', function(e) {
             e.preventDefault();
             setPrompt(e);
+            setMessage("Add to Home Screen".toLocaleUpperCase())
         })
     }, [])
     const renderMessage = () => {
         if(!isStandAlone && msg){
             return (
                 <div className="notificationWrapper">
-                    <div>{msg} <button className="btn btn-Install" onClick={() => {installClickHandler()}}>GET THE APP</button></div>
+                    <button className="btn btn-Install" onClick={() => {installClickHandler()}}>{msg}</button>
                 </div>
             )
         }

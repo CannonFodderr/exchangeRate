@@ -1,6 +1,6 @@
 .CurrenciesGrid{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1vh;
     place-items: center center;
     margin: 1vh;

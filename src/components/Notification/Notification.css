@@ -1,7 +1,18 @@
 .notificationWrapper{
     display: grid;
     place-items: center center;
-    background: #eb1e49;
+    background: #4C4642;
     padding: 1vh;
     text-align: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.btn-install{
+    margin-top: 1vh;
+    transition: 0.4s linear;
+}
+.btn-Install:hover{
+    background: #F2E8C9;
+    color: #4C4642;
 }

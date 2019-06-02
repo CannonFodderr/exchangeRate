@@ -16,7 +16,7 @@ const App = () => {
     const [date, setDate] = useState(INITITAL_DATE)
     const [exRatesData, setExRatesData] = useState({})
     const [favs, setFavs] = useState(INITIAL_FAVS)
-    const [msg, setMessage] = useState("")
+    
     const [isStandAlone, setIsStandAlone] = useState(false)
     const handleNewBase = newBase => {
         if(newBase === base) return
@@ -37,13 +37,11 @@ const App = () => {
         setExRatesData({})
     }
     useEffect(() => {
-        console.log(navigator.serviceWorker)
         if (window.matchMedia('(display-mode: standalone)').matches) {
             console.log("Standalone Mode")
             setIsStandAlone(true)
         } else {
             console.log("Web Mode")
-            setMessage("Use Offline")
         }
     }, [])
     useEffect(() => {
@@ -64,7 +62,7 @@ const App = () => {
             }
     }, [base, date, exRatesData])
     const renderSWNotification = () => {
-        if('serviceWorker' in navigator) return <Notification msg={msg} isStandAlone={isStandAlone}/>
+        if('serviceWorker' in navigator) return <Notification isStandAlone={isStandAlone}/>
         return null;
     }
     const renderContent = () => {
@@ -78,7 +76,6 @@ const App = () => {
         }
         return (
             <div className="AppContainer">
-            {renderSWNotification()}
             <Header base={base} date={date} clearAPiData={clearAPiData}/>
             <Grid 
             base={base} 
@@ -89,6 +86,7 @@ const App = () => {
             addFav={addFav}
             removeFav={removeFav}
             />
+            {renderSWNotification()}
             <Footer />
             </div>
         )
