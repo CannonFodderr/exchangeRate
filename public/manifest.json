@@ -3,7 +3,7 @@
   "name": "Currency Exchange Calculator",
   "short_name": "Currency",
   "description": "Currency Exchange Rate App",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "start_url": "/",
   "background_color": "#4C4642",
   "theme_color": "#4C4642",
