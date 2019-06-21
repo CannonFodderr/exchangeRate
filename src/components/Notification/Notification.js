@@ -7,7 +7,6 @@ const Notification = ({isStandAlone}) => {
     const installClickHandler = () => {
         prompt.prompt()
         prompt.userChoice.then(function(choiceResult){
-                console.log(choiceResult.outcome);
                 if(choiceResult.outcome === 'dismissed'){
                     console.log('User cancelled home screen install');
                 }else{

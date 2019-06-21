@@ -5,7 +5,9 @@ const PRECACHE_URLS = [
     '/',
     'index.html',
     'clipboard.png',
-    'reload.png'
+    'reload.png',
+    '512S.png',
+    '192S.png'
 ]
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js', {scope: './'})
@@ -20,7 +22,7 @@ if('serviceWorker' in navigator){
                             if(confirmed) reg.update()
                         }
                         break
-                    default: return null;
+                    default: return
                 }
             }
         }
@@ -28,7 +30,7 @@ if('serviceWorker' in navigator){
     .catch(err => console.error(err))
 } 
 self.addEventListener('activate', event => {
-    console.log(event)
+    console.log("SW Activated")
 })
 
 
@@ -45,15 +47,9 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', function fetcher (event) {
     var request = event.request;
-    // check if request 
-    if (request.url.indexOf('assets.contentful.com') > -1) {
-      // contentful asset detected
         event.respondWith(
             caches.match(event.request).then(function(response) {
-            // return from cache, otherwise fetch from network
                 return response || fetch(request);
             })
         );
-    }
-    // otherwise: ignore event
 });
